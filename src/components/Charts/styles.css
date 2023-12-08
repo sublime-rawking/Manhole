@@ -1,0 +1,121 @@
+.ChatRow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  justify-items: center;
+  align-items: stretch;
+  align-content: stretch;
+}
+.MainPieWarapper {
+  display: flex;
+  /* width: 100%; */
+}
+.PieWrapper {
+  height: 100%;
+  width: 90%;
+}
+
+.ChartCard {
+  /* height: max-content; */
+  flex: 1;
+}
+
+.line-chart {
+  /* width: 40% !important; */
+  height: 100% !important;
+  background-color: #176b87;
+  float: left;
+}
+
+.selected-item {
+  text-align: center;
+}
+
+.controls-container {
+  --highlight-width: auto;
+  --highlight-x-pos: 0;
+  --highlight-y-pos: 0;
+  justify-self: start;
+  /* display: flex; */
+  /* margin: 100px 0 25px; */
+}
+
+.controls {
+  display: inline-flex;
+  justify-content: space-between;
+  background: white;
+  /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
+  border-radius: 10px;
+  /* max-width: 500px; */
+  padding: 12px;
+  margin: auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.controls input {
+  opacity: 0;
+  margin: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  cursor: pointer;
+  height: 100%;
+}
+
+.segment {
+  /* width: 100%; uncomment for each segment to have matching width */
+  min-width: 100px;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.segment label {
+  cursor: pointer;
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 5px;
+  transition: color 0.5s ease;
+  /* background-color: #176B87; */
+}
+
+.segment.active label {
+  color: #fff;
+}
+
+.controls::before {
+  content: "";
+  background-color: #176b87;
+  border-radius: 8px;
+  width: var(--highlight-width);
+  transform: translateX(var(--highlight-x-pos));
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 0;
+  z-index: 0;
+}
+
+/* Only allow transitions once component is ready */
+.controls.ready::before {
+  transition: transform 0.3s ease, width 0.3s ease;
+}
+.chart-wrapper-div {
+  height: 50%;
+}
+.PieWrapperdiv {
+  height: 50%;
+  width: 50%;
+}
+/* .UserPieChart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+} */
