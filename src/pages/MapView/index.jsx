@@ -4,8 +4,11 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import { pinIcon } from '../../assets/index.js';
+import { calculateRange, sliceData } from '../../utils/table-pagination';
+import { cityDataArr, locationData } from '../../constants/data.js';
 // import { withProtected } from "../../context/protectedroutes.js";
 import "../styles.css";
+
 
 const customIcon = L.icon({
   iconUrl: pinIcon, // Replace with your PNG image path
@@ -17,21 +20,47 @@ const customIcon = L.icon({
 
 function MapView() {
   const [locations, setLocations] = useState([]);
+  const [cityData, setCityData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState([]);
+  const [search, setSearch] = useState('');
+  const [originalData, setOriginalData] = useState([]);
 
   // const position = [19.024842, 73.02202];
 
   useEffect(() => {
-    setLocations([
-      { lat: 19.024842, lng: 73.02202 },
-      { lat: 19.022916887633222, lng: 73.01822716998315 },
-      { lat: 19.024596198488332, lng: 73.0218332354378 },
-      { lat: 19.024497, lng: 73.022029 },
-      { lat: 19.024455, lng: 73.022241 },
-      { lat: 19.024408, lng: 73.022385 },
-      { lat: 19.21743960425978, lng: 72.97707986673828 },
-    ])
-  }, []);
-  console.log("LOCATION : : ", locations)
+    // set locations data
+    setLocations(locationData);
+
+    // set city data
+    setCityData(cityDataArr);
+    setOriginalData(cityDataArr);
+    setPagination(calculateRange(cityDataArr, 10));
+    setCityData(sliceData(cityDataArr, page, 10));
+
+  }, [page]);
+
+  // Search
+  const __handleSearch = (event) => {
+    setSearch(event.target.value);
+    if (event.target.value !== '') {
+      let search_results = originalData.filter((item) =>
+        item.city.toLowerCase().includes(search.toLowerCase())
+      );
+      setCityData(search_results);
+    }
+    else {
+      __handleChangePage(1);
+      setCityData(originalData);
+
+    }
+  };
+
+  // Change Page 
+  const __handleChangePage = (new_page) => {
+    setPage(new_page);
+    setCityData(sliceData(cityData, new_page, 10));
+  }
 
   return (
     <div className="dashboard-content">
@@ -64,54 +93,41 @@ function MapView() {
 
         </div>
 
+        <div className="dashboard-content-header">
+          <h3 className="fw-bold">Table Data</h3>
+          <div className="dashboard-content-search">
+            <input
+              type="text"
+              placeholder="Search.."
+              className="dashboard-content-input"
+              onChange={(e) => __handleSearch(e)}
+            />
+          </div>
+        </div>
 
-        {/* <table>
+        <table>
           <thead>
-            <th key="no">TRIP ID</th>
-            <th key="date">DATE</th>
-            <th key="from">FROM</th>
-            <th key="to">TO</th>
-            <th key="weight">WEIGHT LIMIT</th>
-            <th key="user">TRAVELLER NAME</th>
-            <th key="id">USER ID</th>
+            <th key="no">SR NO.</th>
+            <th key="date">CITY</th>
+            {/* <th key="from">LOCATION</th> */}
+            <th key="to">COUNT</th>
           </thead>
 
-          {trips.length !== 0 ? (
+          {cityData.length !== 0 ? (
             <tbody>
-              {trips.map((trip, index) => (
-                <tr key={trip.id}>
+              {cityData.map((item, index) => (
+                <tr key={item.id}>
                   <td>
-                    <span>{trip.id}</span>
+                    {index + 1}
                   </td>
                   <td>
-                    <span>
-                      {moment(trip.date_of_arrival).format("DD-MM-YYYY")}
-                    </span>
+                    {item.city}
                   </td>
+                  {/* <td>
+                    {item.locationArr[0].lat},{item.locationArr[0].lng}
+                  </td> */}
                   <td>
-                    <span>{trip.from_destination[0].country}</span> -{" "}
-                    <span>{trip.from_destination[0].city}</span>
-                  </td>
-                  <td>
-                    <span>{trip.to_destination[0].country}</span> -{" "}
-                    <span>{trip.to_destination[0].city}</span>
-                  </td>
-                  <td>
-                    <span>{trip.weight_limit[0].value}</span>
-                    <span>{trip.weight_limit[0].unit}</span>
-                  </td>
-                  <td>
-                    <div onClick={() => onPressUserName(trip.userId)}>
-                      <img
-                        src={IMAGE_URL + trip.image}
-                        className="dashboard-content-avatar"
-                        alt={trip.userName}
-                      />
-                      <span>{trip.userName}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span>{trip.userId}</span>
+                    {item.random_number}
                   </td>
                 </tr>
               ))}
@@ -119,7 +135,7 @@ function MapView() {
           ) : null}
         </table>
 
-        {trips.length !== 0 ? (
+        {cityData.length !== 0 ? (
           <div className="dashboard-content-footer">
             {pagination.map((item, index) => (
               <span
@@ -135,9 +151,9 @@ function MapView() {
           <div className="dashboard-content-footer">
             <span className="empty-table">No data</span>
           </div>
-        )} */}
+        )}
 
-        
+
       </div>
     </div >
   );
