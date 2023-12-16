@@ -117,8 +117,8 @@ function Device() {
                             {device.map((item, index) => (
                                 <tr key={item.id} >
                                     <td>{item.id}</td>
-                                    <td style={{ color: item.liverState === 'OFF' ? "red" : "green" }}>{item.liverState !== undefined ? item.liverState : "NA"}</td>
-                                    <td style={{ color: item.waterState === 'NO' ? "red" : "green" }}>{item.waterState !== undefined ? item.waterState : "NA"}</td>
+                                    <td style={{ color: item.liverState === 0 ? "red" : "green" }}>{item.liverState !== undefined ? item.liverState : "NA"}</td>
+                                    <td style={{ color: item.waterState === 0 ? "red" : "green" }}>{item.waterState !== undefined ? item.waterState : "NA"}</td>
                                     <td style={{ color: item.tempretureState === 'NO' ? "red" : "green" }}>{item.tempretureState !== undefined ? item.tempretureState : "NA"}</td>
                                     <td style={{ color: item.connection === 0 ? "red" : "green" }}>{item.connection === 1 ? "ACTIVE" : "IN-ACTIVE"}</td>
                                 </tr>
