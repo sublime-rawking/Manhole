@@ -12,6 +12,9 @@ const socket = new WebSocket("ws://192.168.0.141:6063/?id=999");
 function Device() {
     const [device, setDevice] = useState([]);
     const [page, setPage] = useState(1);
+    const [currentPageSchedule, setCurrentPageSchedule] = useState(1); // State for current page
+    const [endIndexData, setEndIndexData] = useState(1); // State for current page
+
     const [pagination, setPagination] = useState([]);
     const [search, setSearch] = useState('');
     const [originalData, setOriginalData] = useState([]);
@@ -85,6 +88,30 @@ function Device() {
         setDevice(sliceData(device, new_page, 10));
     }
 
+    const handlePrevious = () => {
+        if (currentPageSchedule > 1) {
+            setCurrentPageSchedule((prevState) => {
+                setPage(prevState - 1)
+                return prevState - 1
+            })
+            const startIndex = currentPageSchedule * 10;
+            const endIndex = startIndex - 10;
+            setEndIndexData(endIndex)
+            setDevice(sliceData(device, page, 10));
+        }
+    };
+
+    const handleNext = () => {
+        setCurrentPageSchedule((prevState) => {
+            setPage(prevState + 1)
+            return prevState + 1
+        })
+        const startIndex = currentPageSchedule * 10;
+        const endIndex = startIndex + 10;
+        setEndIndexData(endIndex)
+        setDevice(sliceData(device, page, 10));
+    };
+    
     return (
         <div className='dashboard-content'>
             {/* <DashboardHeader /> */}
@@ -129,14 +156,36 @@ function Device() {
 
                 {device.length !== 0 ?
                     <div className='dashboard-content-footer'>
-                        {pagination.map((item, index) => (
-                            <span
-                                key={index}
-                                className={item === page ? 'active-pagination' : 'pagination'}
-                                onClick={() => __handleChangePage(item)}>
-                                {item}
-                            </span>
-                        ))}
+                        <ul className="pagination">
+                            <li className="page-item">
+                                <span>
+                                    <button
+                                        className="page-link"
+                                        id="previous"
+                                        onClick={() => handlePrevious()}
+                                        disabled={currentPageSchedule === 1}
+                                    >
+                                        Previous
+                                    </button>
+                                </span>
+                            </li>
+                            <li className="page-item">
+                                <span className="page-link">{currentPageSchedule}</span>
+                            </li>
+                            <li className="page-item">
+                                <span>
+                                    <button
+                                        className="page-link"
+                                        id="next"
+                                        type="button"
+                                        onClick={() => handleNext()}
+                                        disabled={endIndexData >= originalData.length || originalData.length < 10}
+                                    >
+                                        Next
+                                    </button>
+                                </span>
+                            </li>
+                        </ul>
                     </div>
                     :
                     <div className='dashboard-content-footer'>

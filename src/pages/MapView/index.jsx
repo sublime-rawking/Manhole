@@ -25,6 +25,8 @@ function MapView() {
   const [pagination, setPagination] = useState([]);
   const [search, setSearch] = useState('');
   const [originalData, setOriginalData] = useState([]);
+  const [currentPageSchedule, setCurrentPageSchedule] = useState(1); // State for current page
+  const [endIndexData, setEndIndexData] = useState(1); // State for current page
 
   // const position = [19.024842, 73.02202];
 
@@ -61,6 +63,33 @@ function MapView() {
     setPage(new_page);
     setCityData(sliceData(cityData, new_page, 10));
   }
+
+
+  const handlePrevious = () => {
+    if (currentPageSchedule > 1) {
+      setCurrentPageSchedule((prevState) => {
+        setPage(prevState - 1)
+        return prevState - 1
+      })
+      const startIndex = currentPageSchedule * 10;
+      const endIndex = startIndex - 10;
+      setEndIndexData(endIndex)
+      setCityData(sliceData(cityData, page, 10));
+
+    }
+  };
+
+  const handleNext = () => {
+    setCurrentPageSchedule((prevState) => {
+      setPage(prevState + 1)
+      return prevState + 1
+    })
+    const startIndex = currentPageSchedule * 10;
+    const endIndex = startIndex + 10;
+    setEndIndexData(endIndex)
+    setCityData(sliceData(cityData, page, 10));
+
+  };
 
   return (
     <div className="dashboard-content">
@@ -137,15 +166,36 @@ function MapView() {
 
         {cityData.length !== 0 ? (
           <div className="dashboard-content-footer">
-            {pagination.map((item, index) => (
-              <span
-                key={index}
-                className={item === page ? "active-pagination" : "pagination"}
-                onClick={() => __handleChangePage(item)}
-              >
-                {item}
-              </span>
-            ))}
+            <ul className="pagination">
+              <li className="page-item">
+                <span>
+                  <button
+                    className="page-link"
+                    id="previous"
+                    onClick={() => handlePrevious()}
+                    disabled={currentPageSchedule === 1}
+                  >
+                    Previous
+                  </button>
+                </span>
+              </li>
+              <li className="page-item">
+                <span className="page-link">{currentPageSchedule}</span>
+              </li>
+              <li className="page-item">
+                <span>
+                  <button
+                    className="page-link"
+                    id="next"
+                    type="button"
+                    onClick={() => handleNext()}
+                    disabled={endIndexData >= originalData.length || originalData.length < 10}
+                  >
+                    Next
+                  </button>
+                </span>
+              </li>
+            </ul>
           </div>
         ) : (
           <div className="dashboard-content-footer">
