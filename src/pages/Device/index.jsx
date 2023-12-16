@@ -5,6 +5,9 @@ import { fetchDeviceData } from '../../services/device.Service';
 // import { withProtected } from "../../context/protectedroutes.js"
 import '../styles.css';
 
+// socket connection
+const socket = new WebSocket("ws://192.168.0.141:6063/?id=999");
+
 
 function Device() {
     const [device, setDevice] = useState([]);
@@ -12,6 +15,7 @@ function Device() {
     const [pagination, setPagination] = useState([]);
     const [search, setSearch] = useState('');
     const [originalData, setOriginalData] = useState([]);
+    const [message, setMessage] = useState('');
 
     const fetchData = async () => {
         try {
@@ -26,10 +30,40 @@ function Device() {
         }
     };
 
+    // Handle errors
+    socket.onerror = function (event) {
+        console.log("Error occured ", event);
+    }
+
+    socket.onclose = function (event) {
+        console.log("Connection closed ", event);
+    }
+
     useEffect(() => {
         fetchData();
-    }, []);
+        socket.onopen = function (event) {
+            console.log("Connection established");
+        }
 
+        // Listen for messages
+        socket.addEventListener("message", async event => {
+            try {
+                const deviceScoketData = JSON.parse(event.data);
+                setDevice(prevState => {
+                    const updatedDevices = prevState.map(device => {
+                        if (device.id === Number(deviceScoketData.id)) {
+                            device[deviceScoketData.key] = deviceScoketData.value;
+                        }
+                        return device;
+                    });
+                    return updatedDevices
+                })
+            } catch (error) {
+                // Handle the error as needed
+                console.log('Error parsing JSON:', error.message);
+            }
+        });
+    }, []);
     // Search
     const __handleSearch = (event) => {
         setSearch(event.target.value);
@@ -59,14 +93,14 @@ function Device() {
                 <div className='dashboard-content-header'>
                     <h2>Devices</h2>
 
-                    <div className='dashboard-content-search'>
+                    {/* <div className='dashboard-content-search'>
                         <input
                             type='text'
                             placeholder='Search..'
                             className='dashboard-content-input'
                             onChange={e => __handleSearch(e)}
                         />
-                    </div>
+                    </div> */}
                 </div>
 
                 <table style={{ textAlign: "center" }}>
