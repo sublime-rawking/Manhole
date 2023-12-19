@@ -1,11 +1,11 @@
 import L from 'leaflet';
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-
+import { fetchDeviceData } from '../../services/device.Service';
 import 'leaflet/dist/leaflet.css';
 import { pinIcon } from '../../assets/index.js';
 import { calculateRange, sliceData } from '../../utils/table-pagination';
-import { cityDataArr, locationData } from '../../constants/data.js';
+import { cityDataArr, } from '../../constants/data.js';
 // import { withProtected } from "../../context/protectedroutes.js";
 import "../styles.css";
 
@@ -29,16 +29,37 @@ function MapView() {
   const [endIndexData, setEndIndexData] = useState(1); // State for current page
 
   // const position = [19.024842, 73.02202];
+  const fetchData = async () => {
+    try {
+      const result = await fetchDeviceData(true);
+
+      const cityCounts = result.data.reduce((counts, item) => {
+        const { city } = item;
+        counts[city] = (counts[city] || 0) + 1;
+        return counts;
+      }, {});
+
+
+      const mappedArray = Object.keys(cityCounts).map(city => ({
+        city,
+        count: cityCounts[city]
+      }));
+
+      // set city data
+      setLocations(result.data);
+      setCityData(mappedArray);
+      setOriginalData(mappedArray);
+      setPagination(calculateRange(mappedArray, 10));
+      setCityData(sliceData(mappedArray, page, 10));
+    } catch (error) {
+      // Handle the error as needed
+      console.error("API call error:", error);
+    }
+  };
 
   useEffect(() => {
-    // set locations data
-    setLocations(locationData);
+    fetchData();
 
-    // set city data
-    setCityData(cityDataArr);
-    setOriginalData(cityDataArr);
-    setPagination(calculateRange(cityDataArr, 10));
-    setCityData(sliceData(cityDataArr, page, 10));
 
   }, [page]);
 
@@ -54,7 +75,6 @@ function MapView() {
     else {
       __handleChangePage(1);
       setCityData(originalData);
-
     }
   };
 
@@ -63,7 +83,6 @@ function MapView() {
     setPage(new_page);
     setCityData(sliceData(cityData, new_page, 10));
   }
-
 
   const handlePrevious = () => {
     if (currentPageSchedule > 1) {
@@ -75,7 +94,6 @@ function MapView() {
       const endIndex = startIndex - 10;
       setEndIndexData(endIndex)
       setCityData(sliceData(cityData, page, 10));
-
     }
   };
 
@@ -88,7 +106,6 @@ function MapView() {
     const endIndex = startIndex + 10;
     setEndIndexData(endIndex)
     setCityData(sliceData(cityData, page, 10));
-
   };
 
   return (
@@ -98,28 +115,20 @@ function MapView() {
       <div className="dashboard-content-container">
         <div className="dashboard-content-header">
           <h3 className="fw-bold">Map View</h3>
-          <div className="dashboard-content-search">
-            {/* <input
-              type="text"
-              placeholder="Search.."
-              className="dashboard-content-input"
-            /> */}
-          </div>
         </div>
 
         <div style={{ height: '100%', width: '100%' }}>
           <MapContainer center={[19.024842, 73.02202]} zoom={13} style={{ height: '400px', width: '100%' }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {locations.map((location, index) => (
+            {locations.map((location, index) => (console.log("location ", location),
+
               <Marker key={index} position={[location.lat, location.lng]} icon={customIcon} >
                 <Popup>
                   Latitude: {location.lat}, Longitude: {location.lng}
                 </Popup>
               </Marker>
             ))}
-
           </MapContainer>
-
         </div>
 
         <div className="dashboard-content-header">
@@ -156,7 +165,7 @@ function MapView() {
                     {item.locationArr[0].lat},{item.locationArr[0].lng}
                   </td> */}
                   <td>
-                    {item.random_number}
+                    {item.count}
                   </td>
                 </tr>
               ))}

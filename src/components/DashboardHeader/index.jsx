@@ -35,10 +35,10 @@ function DashboardHeader({ btnText, onClick }) {
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
-        console.log("formData :: ", formData);
+        // console.log("formData :: ", formData);
 
         const response = await changePassword(formData);
-        console.log("response :: ", response);
+        // console.log("response :: ", response);
         if (response.success) {
             toast.success(response.message, {
                 position: "bottom-right",

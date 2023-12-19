@@ -1,6 +1,7 @@
 import DashboardIcon from '../assets/icons/dashboard.svg';
 import MicrochipIcon from '../assets/icons/microchip.svg';
 import MapIcon from '../assets/icons/mapview.svg';
+import SliderIcon from '../assets/icons/sliders.svg';
 
 const sidebar_menu = [
     {
@@ -21,12 +22,12 @@ const sidebar_menu = [
         path: '/mapView',
         title: 'Map View',
     },
-    // {
-    //     id: 4,
-    //     icon: ShippingIcon,
-    //     path: '/orders',
-    //     title: 'Orders',
-    // },
+    {
+        id: 4,
+        icon: SliderIcon,
+        path: '/configure',
+        title: 'Configure',
+    },
 
 ]
 

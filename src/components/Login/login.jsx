@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { withPublic } from "../../context/protectedroutes";
 import useAuth from "../../context/userContext.js";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminPng from "../../assets/images/admin.png";
 import logo from "../../assets/icons/Featherr.svg";
 import "./styles.css";
+import {
+  AiFillEye,
+  AiFillEyeInvisible,
+  AiOutlineCloseCircle,
+} from "react-icons/ai";
 
 // toast.configure();
 
@@ -13,42 +17,32 @@ export default withPublic(Login);
 function Login() {
   const [userName, setUserName] = useState();
   const [password, setPassword] = useState();
-  const { loginWithEmail } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { logIn } = useAuth();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await loginWithEmail({
+      const result = await logIn({
         userName,
         password,
       });
       if (!result) {
-        toast.error("Invalid Credentials", {
-          position: "bottom-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeonClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-        });
+        alert("Invalid Credentials")
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleTogglePassword = (setter, value) => {
+    setter(!value);
+  };
+
   return (
-    // <section className="ftco-section">
     <div className="mx-5 my-4">
       <div className="text-center mx-2 ">
-        <img
-          src={logo}
-          alt="logo"
-          style={{
-            width: "25%",
-            objectFit: "cover",
-          }}
-        />
+        <h1>MANHOLE</h1>
       </div>
 
       <div className="row justify-content-center">
@@ -63,25 +57,39 @@ function Login() {
               <div className="form-group mb-2">
                 <input
                   type="text"
-                  className="form-control rounded-left PlaceHolder"
+                  className="form-control PlaceHolder"
                   placeholder="Username"
                   required
                   onChange={(e) => setUserName(e.target.value)}
                 />
               </div>
-              <div className="form-group d-flex">
+
+              <div className="form-group-login d-flex position-relative">
                 <input
-                  type="password"
-                  className="form-control rounded-left"
+                  type={showPassword ? "text" : "password"}
+                  className="form-control PlaceHolder"
                   placeholder="Password"
                   required
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <div
+                  className="eye-icon"
+                  onClick={() =>
+                    handleTogglePassword(setShowPassword, showPassword)
+                  }
+                >
+                  {showPassword ? (
+                    <AiFillEye color="#2d83b5" size={20} />
+                  ) : (
+                    <AiFillEyeInvisible color="#2d83b5" size={20} />
+                  )}
+                </div>
               </div>
+
               <div className="form-group">
                 <button
                   type="submit"
-                  className="btn btn-primary rounded submit p-3 px-5 my-2"
+                  className="btn btn-primary rounded submit py-3 px-5 my-2"
                 >
                   Login
                 </button>
@@ -90,8 +98,6 @@ function Login() {
           </div>
         </div>
       </div>
-      <ToastContainer />
     </div>
-    // </section>
   );
 }

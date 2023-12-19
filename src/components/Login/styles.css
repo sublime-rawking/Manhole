@@ -153,10 +153,6 @@ body {
   color: #fff;
 }
 
-.form-group {
-  /* margin: 5px 0; */
-  position: relative;
-}
 
 .form-group .submit {
   position: absolute;
@@ -170,4 +166,25 @@ body {
   .form-group .submit {
     top: 0;
   }
+}
+
+
+.form-group {
+  position: relative;
+  width: 100%;
+  /* Adjust as per your layout */
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  /* Adjust for proper alignment */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.PlaceHolder {
+  padding-right: 30px;
+  /* Adjust padding to prevent text overlap with the icon */
 }

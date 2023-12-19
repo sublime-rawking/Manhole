@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-// import useAuth from "../../context/userContext";
+import useAuth from "../../context/userContext";
 import SideBarItem from "./sidebar-item";
 
 import "./styles.css";
 // import logo from '../../assets/images/white-logo.png';
-// import LogoutIcon from "../../assets/icons/logout.svg";
+import LogoutIcon from "../../assets/icons/logout.svg";
 
 function SideBar({ menu }) {
   const location = useLocation();
   const [active, setActive] = useState(1);
-  // const { logOut } = useAuth();
+  const { logOut } = useAuth();
 
   useEffect(() => {
     menu.forEach((element) => {
@@ -33,7 +33,7 @@ function SideBar({ menu }) {
     setActive(id);
   };
 
-  // const logout = async () => await logOut();
+  const logout = async () => await logOut();
 
   return (
     <nav className="sidebar">
@@ -52,14 +52,14 @@ function SideBar({ menu }) {
             ))}
           </div>
 
-          {/* <div className="sidebar-footer" onClick={logout}>
+          <div className="sidebar-footer" onClick={logout}>
             <img
               src={LogoutIcon}
               alt="icon-logout"
               className="sidebar-item-icon"
             />
             <span className="sidebar-item-label">Logout</span>
-          </div> */}
+          </div>
         </div>
       </div>
     </nav>

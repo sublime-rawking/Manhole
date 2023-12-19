@@ -111,7 +111,7 @@ function Device() {
         setEndIndexData(endIndex)
         setDevice(sliceData(device, page, 10));
     };
-    
+
     return (
         <div className='dashboard-content'>
             {/* <DashboardHeader /> */}
@@ -144,9 +144,9 @@ function Device() {
                             {device.map((item, index) => (
                                 <tr key={item.id} >
                                     <td>{item.id}</td>
-                                    <td style={{ color: item.liverState === 0 ? "red" : "green" }}>{item.liverState !== undefined ? item.liverState : "NA"}</td>
-                                    <td style={{ color: item.waterState === 0 ? "red" : "green" }}>{item.waterState !== undefined ? item.waterState : "NA"}</td>
-                                    <td style={{ color: item.tempretureState === 'NO' ? "red" : "green" }}>{item.tempretureState !== undefined ? item.tempretureState : "NA"}</td>
+                                    <td style={{ color: item.liverState === 0 ? "red" : "green" }}>{item.liverState !== undefined ? item.liverState === 1 ? "OPEN" : "CLOSE" : "NA"}</td>
+                                    <td style={{ color: item.waterState === 0 ? "red" : "green" }}>{item.waterState !== undefined ? item.waterState === 0 ? "HIGH" : "NORMAL" : "NA"}</td>
+                                    <td style={{ color: item.tempretureState === 'LOW' ? "red" : "green" }}>{item.tempretureState !== undefined ? item.tempretureState === 'YES' ? "HIGH" : "LOW" : "NA"}</td>
                                     <td style={{ color: item.connection === 0 ? "red" : "green" }}>{item.connection === 1 ? "ACTIVE" : "IN-ACTIVE"}</td>
                                 </tr>
                             ))}
