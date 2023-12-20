@@ -26,7 +26,7 @@ export const fetchDeviceData = async (getCords) => {
     } catch (error) {
         console.error('Error fetching data :', error);
         throw error;
-    }
+    } 
 };
 
 export const deviceConfigure = async (fromData) => {

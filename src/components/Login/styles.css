@@ -20,6 +20,7 @@
   background-repeat: no-repeat;
   background-position: center center;
 }
+
 /* 
 body {
   display: flex;
@@ -41,7 +42,7 @@ body {
 .login-wrap h3 {
   font-weight: 700;
   font-size: 20px;
-  color: #176B87;
+  color: #994D1C;
 }
 
 .dashbord-header-img {
@@ -130,8 +131,9 @@ body {
 }
 
 .btn.btn-primary {
-  background: #176B87 !important;
-  border: 1px solid #176B87 !important;
+  /* background: #176B87 !important; */
+  background: #994D1C !important;
+  border: 1px solid #6f3a16 !important;
   color: #fff !important;
 }
 
@@ -187,4 +189,8 @@ body {
 .PlaceHolder {
   padding-right: 30px;
   /* Adjust padding to prevent text overlap with the icon */
+}
+
+.logo-text {
+  color: #994D1C;
 }

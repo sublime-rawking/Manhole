@@ -42,7 +42,7 @@ function Login() {
   return (
     <div className="mx-5 my-4">
       <div className="text-center mx-2 ">
-        <h1>MANHOLE</h1>
+        <h1 className="logo-text">MANHOLE</h1>
       </div>
 
       <div className="row justify-content-center">
@@ -52,7 +52,7 @@ function Login() {
               {/* <span className="fa fa-user-o"></span> */}
               <img alt="" className="dashbord-header-img" src={AdminPng} />
             </div>
-            <h3 className="text-center mb-3 mt-3">Admin</h3>
+            <h3 className="text-center mb-3 mt-3 logo-text">Admin</h3>
             <form action="#" className="login-form" onSubmit={handleSubmit}>
               <div className="form-group mb-2">
                 <input
