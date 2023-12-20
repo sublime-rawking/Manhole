@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { fetchDeviceData, deviceConfigure } from '../../services/device.Service';
 // import DashboardHeader from '../../components/DashboardHeader';
-// import { withProtected } from "../../context/protectedroutes.js"
+import { withProtected } from "../../context/protectedroutes.js"
 import '../styles.css';
 
 
@@ -14,8 +13,6 @@ function Device() {
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
     const [city, setCity] = useState('');
-    // const variable array to save the users location
-    const [userLocation, setUserLocation] = useState(null);
 
     // define the function that finds the users geolocation
     const getUserLocation = () => {
@@ -26,8 +23,6 @@ function Device() {
                 (position) => {
                     // save the geolocation coordinates in two variables
                     const { latitude, longitude } = position.coords;
-                    // update the value of userlocation variable
-                    setUserLocation({ latitude, longitude });
                     setLatitude(latitude);
                     setLongitude(longitude);
                 },
@@ -159,5 +154,5 @@ function Device() {
     )
 }
 
-// export default withProtected(Device);
-export default Device;
+export default withProtected(Device);
+// export default Device;

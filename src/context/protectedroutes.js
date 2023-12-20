@@ -3,8 +3,8 @@ import useAuth from "./userContext.js";
 export function withProtected(Component) {
     return function WithProtected(props) {
         const auth = useAuth();
-        if (!auth.user) {
-            return <Navigate to="/" replace />
+        if (!auth.admin) {
+            return <Navigate to="/login" replace />
         }
         return <Component auth={auth} {...props} />;
     };
@@ -13,8 +13,8 @@ export function withProtected(Component) {
 export function withPublic(Component) {
     return function WithPublic(props) {
         const auth = useAuth();
-
-        if (auth.user) {
+        console.log("AUTH", auth);
+        if (auth.admin) {
             return <Navigate to="/" replace />
         }
         return <Component auth={auth} {...props} />;

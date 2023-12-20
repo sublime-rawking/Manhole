@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 // import DashboardHeader from "../../components/DashboardHeader";
 // import Header from "../../components/Headers";
 // import ChartComponent from "../../components/Charts";
-// import { withProtected } from "../../context/protectedroutes.js";
+import { withProtected } from "../../context/protectedroutes.js";
 // import { calculateRange, sliceData } from "../../utils/table-pagination";
 
 import "../styles.css";
@@ -27,5 +27,5 @@ function Dashboard() {
     );
 }
 
-// export default withProtected(Dashboard);
-export default Dashboard;
+export default withProtected(Dashboard);
+// export default Dashboard;

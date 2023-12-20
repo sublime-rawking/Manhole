@@ -3,12 +3,10 @@ import { withPublic } from "../../context/protectedroutes";
 import useAuth from "../../context/userContext.js";
 import "react-toastify/dist/ReactToastify.css";
 import AdminPng from "../../assets/images/admin.png";
-import logo from "../../assets/icons/Featherr.svg";
 import "./styles.css";
 import {
   AiFillEye,
   AiFillEyeInvisible,
-  AiOutlineCloseCircle,
 } from "react-icons/ai";
 
 // toast.configure();

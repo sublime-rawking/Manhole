@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { calculateRange, sliceData } from '../../utils/table-pagination';
+import { sliceData } from '../../utils/table-pagination';
 import { fetchDeviceData } from '../../services/device.Service';
 // import DashboardHeader from '../../components/DashboardHeader';
-// import { withProtected } from "../../context/protectedroutes.js"
+import { withProtected } from "../../context/protectedroutes.js"
 import '../styles.css';
 
 // socket connection
@@ -14,18 +14,13 @@ function Device() {
     const [page, setPage] = useState(1);
     const [currentPageSchedule, setCurrentPageSchedule] = useState(1); // State for current page
     const [endIndexData, setEndIndexData] = useState(1); // State for current page
-
-    const [pagination, setPagination] = useState([]);
-    const [search, setSearch] = useState('');
     const [originalData, setOriginalData] = useState([]);
-    const [message, setMessage] = useState('');
 
     const fetchData = async () => {
         try {
             const result = await fetchDeviceData();
             setDevice(result.data);
             setOriginalData(result.data);
-            setPagination(calculateRange(result.data, 10));
             setDevice(sliceData(result.data, page, 10));
         } catch (error) {
             // Handle the error as needed
@@ -67,26 +62,7 @@ function Device() {
             }
         });
     }, []);
-    // Search
-    const __handleSearch = (event) => {
-        setSearch(event.target.value);
-        if (event.target.value !== '') {
-            // let search_results = originalData.filter((item) =>
-            //     item.userName.toLowerCase().includes(search.toLowerCase())
-            // );
-            // setDevice(search_results);
-        }
-        else {
-            fetchData();
-            __handleChangePage(1);
-        }
-    };
 
-    // Change Page 
-    const __handleChangePage = (new_page) => {
-        setPage(new_page);
-        setDevice(sliceData(device, new_page, 10));
-    }
 
     const handlePrevious = () => {
         if (currentPageSchedule > 1) {
@@ -119,15 +95,6 @@ function Device() {
             <div className='dashboard-content-container'>
                 <div className='dashboard-content-header'>
                     <h2>Devices</h2>
-
-                    {/* <div className='dashboard-content-search'>
-                        <input
-                            type='text'
-                            placeholder='Search..'
-                            className='dashboard-content-input'
-                            onChange={e => __handleSearch(e)}
-                        />
-                    </div> */}
                 </div>
 
                 <table style={{ textAlign: "center" }}>
@@ -200,5 +167,5 @@ function Device() {
     )
 }
 
-// export default withProtected(Device);
-export default Device;
+export default withProtected(Device);
+// export default Device;

@@ -4,9 +4,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { fetchDeviceData } from '../../services/device.Service';
 import 'leaflet/dist/leaflet.css';
 import { pinIcon } from '../../assets/index.js';
-import { calculateRange, sliceData } from '../../utils/table-pagination';
-import { cityDataArr, } from '../../constants/data.js';
-// import { withProtected } from "../../context/protectedroutes.js";
+import { sliceData } from '../../utils/table-pagination';
+import { withProtected } from "../../context/protectedroutes.js";
 import "../styles.css";
 
 
@@ -22,7 +21,6 @@ function MapView() {
   const [locations, setLocations] = useState([]);
   const [cityData, setCityData] = useState([]);
   const [page, setPage] = useState(1);
-  const [pagination, setPagination] = useState([]);
   const [search, setSearch] = useState('');
   const [originalData, setOriginalData] = useState([]);
   const [currentPageSchedule, setCurrentPageSchedule] = useState(1); // State for current page
@@ -49,7 +47,6 @@ function MapView() {
       setLocations(result.data);
       setCityData(mappedArray);
       setOriginalData(mappedArray);
-      setPagination(calculateRange(mappedArray, 10));
       setCityData(sliceData(mappedArray, page, 10));
     } catch (error) {
       // Handle the error as needed
@@ -59,8 +56,6 @@ function MapView() {
 
   useEffect(() => {
     fetchData();
-
-
   }, [page]);
 
   // Search
@@ -120,8 +115,7 @@ function MapView() {
         <div style={{ height: '100%', width: '100%' }}>
           <MapContainer center={[19.024842, 73.02202]} zoom={13} style={{ height: '400px', width: '100%' }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {locations.map((location, index) => (console.log("location ", location),
-
+            {locations.map((location, index) => (
               <Marker key={index} position={[location.lat, location.lng]} icon={customIcon} >
                 <Popup>
                   Latitude: {location.lat}, Longitude: {location.lng}
@@ -147,7 +141,6 @@ function MapView() {
           <thead>
             <th key="no">SR NO.</th>
             <th key="date">CITY</th>
-            {/* <th key="from">LOCATION</th> */}
             <th key="to">COUNT</th>
           </thead>
 
@@ -161,9 +154,6 @@ function MapView() {
                   <td>
                     {item.city}
                   </td>
-                  {/* <td>
-                    {item.locationArr[0].lat},{item.locationArr[0].lng}
-                  </td> */}
                   <td>
                     {item.count}
                   </td>
@@ -218,5 +208,5 @@ function MapView() {
   );
 }
 
-// export default withProtected(MapView);
-export default MapView;
+export default withProtected(MapView);
+// export default MapView;
