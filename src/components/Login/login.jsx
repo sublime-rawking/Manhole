@@ -79,9 +79,9 @@ function Login() {
                   }
                 >
                   {showPassword ? (
-                    <AiFillEye color="#2d83b5" size={20} />
+                    <AiFillEye color="#616161" size={20} />
                   ) : (
-                    <AiFillEyeInvisible color="#2d83b5" size={20} />
+                    <AiFillEyeInvisible color="#616161" size={20} />
                   )}
                 </div>
               </div>
