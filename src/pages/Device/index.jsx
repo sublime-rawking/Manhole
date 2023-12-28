@@ -113,7 +113,7 @@ function Device() {
                                     <td>{item.id}</td>
                                     <td style={{ color: item.liverState === 0 ? "red" : "green" }}>{item.liverState !== undefined ? item.liverState === 1 ? "OPEN" : "CLOSE" : "NA"}</td>
                                     <td style={{ color: item.waterState === 0 ? "red" : "green" }}>{item.waterState !== undefined ? item.waterState === 0 ? "HIGH" : "NORMAL" : "NA"}</td>
-                                    <td style={{ color: item.tempretureState === 'LOW' ? "red" : "green" }}>{item.tempretureState !== undefined ? item.tempretureState === 'YES' ? "HIGH" : "LOW" : "NA"}</td>
+                                    <td style={{ color: item.tempretureState >= 250 ? "red" : "green" }}>{item.tempretureState !== undefined ? item.tempretureState : "NA"}</td>
                                     <td style={{ color: item.connection === 0 ? "red" : "green" }}>{item.connection === 1 ? "ACTIVE" : "IN-ACTIVE"}</td>
                                 </tr>
                             ))}
@@ -163,7 +163,7 @@ function Device() {
             </div>
 
 
-        </div>
+        </div >
     )
 }
 
