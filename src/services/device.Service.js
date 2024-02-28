@@ -21,7 +21,9 @@ export const adminLogin = async (credentials) => {
 
 export const fetchDeviceData = async (getCords) => {
     try {
+        console.log(API_BASE_URL);
         const response = await axios.get(`${API_BASE_URL}/device/deviceList` + (getCords ? '?getCords=true' : ''));
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching data :', error);

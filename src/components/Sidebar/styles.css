@@ -1,7 +1,7 @@
 .sidebar {
     top: 0;
     left: 0;
-    width: 250px;
+    width: 200px;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -73,7 +73,7 @@
 }
 
 .sidebar-item-label {
-    font-size: larger;
+    font-size: small;
     font-weight: 600;
     margin-left: 15px;
 }

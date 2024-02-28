@@ -4,9 +4,11 @@ import { fetchDeviceData } from '../../services/device.Service';
 // import DashboardHeader from '../../components/DashboardHeader';
 import { withProtected } from "../../context/protectedroutes.js"
 import '../styles.css';
+import checked from '../../assets/images/check.png'
+import errorAnimation from '../../assets/animation/error.gif';
 
 // socket connection
-const socket = new WebSocket("ws://192.168.0.141:6063/?id=999");
+const socket = new WebSocket(`${process.env.REACT_APP_WEBSOCKET}/?id=999`);
 
 
 function Device() {
@@ -16,17 +18,7 @@ function Device() {
     const [endIndexData, setEndIndexData] = useState(1); // State for current page
     const [originalData, setOriginalData] = useState([]);
 
-    const fetchData = async () => {
-        try {
-            const result = await fetchDeviceData();
-            setDevice(result.data);
-            setOriginalData(result.data);
-            setDevice(sliceData(result.data, page, 10));
-        } catch (error) {
-            // Handle the error as needed
-            console.error('API call error:', error);
-        }
-    };
+
 
     // Handle errors
     socket.onerror = function (event) {
@@ -38,6 +30,16 @@ function Device() {
     }
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await fetchDeviceData();
+                setOriginalData(result.data);
+                setDevice(sliceData(result.data, page, 10));
+            } catch (error) {
+                // Handle the error as needed
+                console.error('API call error:', error);
+            }
+        };
         fetchData();
         socket.onopen = function (event) {
             console.log("Connection established");
@@ -103,20 +105,29 @@ function Device() {
                         <th key="liver">LIVER STATE</th>
                         <th key="water">WATER BLOCKAGE</th>
                         <th key="temp">TEMPRETURE STATE</th>
-                        <th key="connection">CONNECTION</th>
+                        <th key="connection">BATTERY</th>
+                        <th key="status">STATUS</th>
                     </thead>
 
                     {device.length !== 0 ?
                         <tbody>
-                            {device.map((item, index) => (
-                                <tr key={item.id} >
-                                    <td>{item.id}</td>
-                                    <td style={{ color: item.liverState === 0 ? "red" : "green" }}>{item.liverState !== undefined ? item.liverState === 1 ? "OPEN" : "CLOSE" : "NA"}</td>
-                                    <td style={{ color: item.waterState === 0 ? "red" : "green" }}>{item.waterState !== undefined ? item.waterState === 0 ? "HIGH" : "NORMAL" : "NA"}</td>
-                                    <td style={{ color: item.tempretureState >= 250 ? "red" : "green" }}>{item.tempretureState !== undefined ? item.tempretureState : "NA"}</td>
-                                    <td style={{ color: item.connection === 0 ? "red" : "green" }}>{item.connection === 1 ? "ACTIVE" : "IN-ACTIVE"}</td>
-                                </tr>
-                            ))}
+                            {device.map((item, index) => {
+                                let showStatus = true;
+                                if (item.liverState === 1 || item.waterState === 1 || item.batteryStatus === 'low' || Number(item.tempretureState).toFixed(2) >= 30) {
+                                    showStatus = false
+                                }
+                                return (
+                                    <tr key={index} >
+                                        <td>{item.id}</td>
+                                        <td style={{ color: item.liverState === 1 ? "red" : "green" }}>{item.liverState !== undefined ? item.liverState === 1 ? "OPEN" : "CLOSE" : "NA"}</td>
+                                        <td style={{ color: item.waterState === 1 ? "red" : "green" }}>{item.waterState !== undefined ? item.waterState === 1 ? "HIGH" : "NORMAL" : "NA"}</td>
+                                        <td style={{ color: Number(item.tempretureState).toFixed(2) >= 30 ? "red" : "green" }}>{item.tempretureState !== undefined ? Number(item.tempretureState).toFixed(2) : "NA"}</td>
+                                        <td style={{ color: item.batteryStatus === 'low' ? "red" : "green" }}>{item.batteryStatus !== undefined ? item.batteryStatus.toUpperCase() : "NA"}</td>
+                                        <td ><img src={showStatus ? checked : errorAnimation} alt="status" width={showStatus ? "20" : "40"} />
+                                        </td>
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                         : null}
                 </table>

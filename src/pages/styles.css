@@ -44,7 +44,7 @@
     align-items: center;
     position: relative;
     background-color: transparent;
-    font-size: 0.875rem;
+    font-size: 24px;
     width: 200px;
     /* border-radius: 0.375rem;
     border: 1px solid gray; */
@@ -87,7 +87,7 @@ th {
     background: transparent;
     box-shadow: none;
     color: #2D83B5;
-    /* font-size: 0.75rem; */
+    font-size: 0.80rem;
     font-weight: 700;
     line-height: 1.25;
     letter-spacing: 0.035em;
@@ -161,7 +161,7 @@ td div {
 
 td span {
     margin: 0px;
-    font-size: 0.75rem;
+    font-size: 0.60rem;
     line-height: 1.25;
     letter-spacing: 0.035em;
     opacity: 1;
