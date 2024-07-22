@@ -20,9 +20,15 @@ SoftwareSerial Serial2(D5, D6);  // RX, TX
 #define WIFI_PASSWORD "12345678" // wifi password 
 #define webUrl "192.168.38.175" // server ip
 
-// pins
-int liverPin = 14, waterLevelPin = 16, temperture = 0;
-int prevLiverState = 0, prevWaterLevelState = 0, prevTempertureState = 0;
+// input pins
+const int liverPin = 14; // input pin for the liver sensor
+const int waterLevelPin = 16; // input pin for the water level sensor
+const int temperaturePin = A0; // input pin for the temperature sensor
+
+// previous states of the sensors
+int prevLiverState = 0;
+int prevWaterLevelState = 0;
+int prevTemperatureState = 0;
 
 // devices  id  (do not change the devices id . it is config with the server)
 int deviceId = 1;
