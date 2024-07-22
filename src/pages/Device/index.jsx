@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { sliceData } from '../../utils/table-pagination';
 import { fetchDeviceData } from '../../services/device.Service';
-// import DashboardHeader from '../../components/DashboardHeader';
 import { withProtected } from "../../context/protectedroutes.js"
 import '../styles.css';
 import checked from '../../assets/images/check.png'
@@ -18,13 +17,23 @@ function Device() {
     const [endIndexData, setEndIndexData] = useState(1); // State for current page
     const [originalData, setOriginalData] = useState([]);
 
-
-
     // Handle errors
+    /**
+     * Handle error events from the WebSocket connection.
+     * Logs the error event to the console.
+     *
+     * @param {Event} event - The error event.
+     */
     socket.onerror = function (event) {
         console.log("Error occured ", event);
     }
 
+    /**
+     * Handle close events from the WebSocket connection.
+     * Logs the close event to the console.
+     *
+     * @param {Event} event - The close event.
+     */
     socket.onclose = function (event) {
         console.log("Connection closed ", event);
     }
@@ -41,17 +50,23 @@ function Device() {
             }
         };
         fetchData();
+        // Listen for connection established event
         socket.onopen = function (event) {
             console.log("Connection established");
         }
 
         // Listen for messages
+        // When a message is received, parse the JSON data and update the device state
         socket.addEventListener("message", async event => {
             try {
                 const deviceScoketData = JSON.parse(event.data);
+
+                // Update the device state with the new value
                 setDevice(prevState => {
                     const updatedDevices = prevState.map(device => {
+                        // Check if the device id matches the one in the message
                         if (device.id === Number(deviceScoketData.id)) {
+                            // Update the specific property based on the key in the message
                             device[deviceScoketData.key] = deviceScoketData.value;
                         }
                         return device;
@@ -66,27 +81,38 @@ function Device() {
     }, []);
 
 
+    // Handle the previous page button
     const handlePrevious = () => {
+        // Only allow navigating to previous page if not already on the first page
         if (currentPageSchedule > 1) {
+            // Update the current page state
             setCurrentPageSchedule((prevState) => {
                 setPage(prevState - 1)
                 return prevState - 1
             })
+            // Calculate the start and end indices for the new slice of data
             const startIndex = currentPageSchedule * 10;
             const endIndex = startIndex - 10;
+            // Update the end index state
             setEndIndexData(endIndex)
+            // Update the device state with the new slice of data
             setDevice(sliceData(device, page, 10));
         }
     };
 
+    // Handle the next page button
     const handleNext = () => {
+        // Update the current page state
         setCurrentPageSchedule((prevState) => {
             setPage(prevState + 1)
             return prevState + 1
         })
+        // Calculate the start and end indices for the new slice of data
         const startIndex = currentPageSchedule * 10;
         const endIndex = startIndex + 10;
+        // Update the end index state
         setEndIndexData(endIndex)
+        // Update the device state with the new slice of data
         setDevice(sliceData(device, page, 10));
     };
 
@@ -179,4 +205,3 @@ function Device() {
 }
 
 export default withProtected(Device);
-// export default Device;

@@ -17,26 +17,33 @@ function Login() {
   const [password, setPassword] = useState();
   const [showPassword, setShowPassword] = useState(false);
 
+  // use the logIn function from the context
   const { logIn } = useAuth();
+  // function to handle the form submission
   const handleSubmit = async (e) => {
+    // prevent the default form submission behavior
     e.preventDefault();
     try {
+      // call the logIn function with the user credentials
       const result = await logIn({
         userName,
         password,
       });
+      // if the result is false, show an alert with the error message
       if (!result) {
         alert("Invalid Credentials")
       }
     } catch (error) {
+      // log the error to the console
       console.log(error);
     }
   };
 
+  // function to toggle the visibility of the password
   const handleTogglePassword = (setter, value) => {
+    // toggle the value of the showPassword state
     setter(!value);
   };
-
   return (
     <div className="mx-5 my-4">
       <div className="text-center mx-2 ">

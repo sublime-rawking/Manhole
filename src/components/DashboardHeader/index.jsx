@@ -33,12 +33,16 @@ function DashboardHeader({ btnText, onClick }) {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleChangePassword = async (e) => {
+const handleChangePassword = async (e) => {
+        // Prevent default form submission
         e.preventDefault();
+        
+        // Call the changePassword API
         // console.log("formData :: ", formData);
-
         const response = await changePassword(formData);
         // console.log("response :: ", response);
+        
+        // Display success or error toast based on API response
         if (response.success) {
             toast.success(response.message, {
                 position: "bottom-right",
@@ -49,6 +53,7 @@ function DashboardHeader({ btnText, onClick }) {
                 draggable: true,
                 progress: undefined,
             });
+            // Log out the user on success
             logOut();
         } else {
             toast.error(response.message, {
@@ -61,7 +66,8 @@ function DashboardHeader({ btnText, onClick }) {
                 progress: undefined,
             });
         }
-        // Clear the form input values
+        
+        // Clear the form input values after submission
         setFormData({
             userName: 'admin2023',
             oldPassword: '',
@@ -90,6 +96,7 @@ function DashboardHeader({ btnText, onClick }) {
     }
 
     // return focus to the button when we transitioned from !open -> open
+// Check if the previous state was open and the current state is closed to focus on the anchor reference
     const prevOpen = React.useRef(open);
     React.useEffect(() => {
         if (prevOpen.current === true && open === false) {
@@ -97,6 +104,8 @@ function DashboardHeader({ btnText, onClick }) {
         }
         prevOpen.current = open;
     }, [open]);
+
+    // Retrieve user data from local storage and update the form data
     React.useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
