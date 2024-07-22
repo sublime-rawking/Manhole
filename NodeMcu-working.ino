@@ -1,15 +1,8 @@
-/*
- * WebSocketClient.ino
- *
- *  Created on: 24.05.2015
- *
- */
-
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
-
+#include <SoftwareSerial.h>
 #include <WebSocketsClient.h>
 
 #include <Hash.h>
@@ -19,31 +12,40 @@
 ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 #define USE_SERIAL Serial1
+SoftwareSerial Serial2(D5, D6);  // RX, TX
 
 
 
-#define WIFI_SSID "Sami Infotech Mach1_2.4G"
-#define WIFI_PASSWORD "Falcon@F21"
-#define webUrl "192.168.0.141"
+#define WIFI_SSID "myproject"  // wifi ssid 
+#define WIFI_PASSWORD "12345678" // wifi password 
+#define webUrl "192.168.38.175" // server ip
 
 // pins
 int liverPin = 14, waterLevelPin = 16, temperture = 0;
 int prevLiverState = 0, prevWaterLevelState = 0, prevTempertureState = 0;
 
-// devices  id
+// devices  id  (do not change the devices id . it is config with the server)
 int deviceId = 1;
 
 
-DynamicJsonDocument doc(128);
+DynamicJsonDocument doc(128);  // this is a var to create the json and send to server
 
 
 
+/**
+ * @brief Handles different types of WebSocket events
+ * 
+ * @param type The type of WebSocket event
+ * @param payload The payload data received
+ * @param length The length of the payload data
+ */
 void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
 
   switch (type) {
     case WStype_DISCONNECTED:
       {
-        doc.clear();  // Clear the document before adding new data
+        // Clear the document before adding new data
+        doc.clear();  
         doc["id"] = String(deviceId);
         doc["cmd"] = "disconnected";
         String jsonString;
@@ -57,7 +59,7 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
         USE_SERIAL.printf("[WSc] Connected to url: %s\n", payload);
 
         // send message to server when Connected
-        doc.clear();  // Clear the document before adding new data
+        doc.clear();  
         doc["id"] = String(deviceId);
         doc["cmd"] = "connected";
         String jsonString;
@@ -92,8 +94,8 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
 
 void setup() {
   USE_SERIAL.begin(115200);
-  // Serial.begin(115200);
   Serial.begin(9600);
+  Serial2.begin(9600);
   //Serial.setDebugOutput(true);
 
   USE_SERIAL.setDebugOutput(true);
@@ -118,6 +120,7 @@ void setup() {
   String query = "/?id=" + String(deviceId);
   webSocket.begin(webUrl, 6063, query);
 
+
   // event handler
   webSocket.onEvent(webSocketEvent);
 
@@ -135,20 +138,19 @@ void setup() {
 }
 
 void loop() {
+
+  // let the websocket client run
   webSocket.loop();
 
-  if (Serial.available() > 0) {
+// only if the serial monitor have printed something
+  if (Serial2.available() > 0) {
 
-    String data = Serial.readString();  // NAME THE RECEIVED STRING
-    data.trim();
-    Serial.println(data);  // ELIMINATE EXTRA CHARACTERS USING TRIM(), WHITESPACE
-    webSocket.sendTXT(data);
+    String data = Serial2.readString();  // NAME THE RECEIVED STRING
+    data.trim();  // ELIMINATE EXTRA CHARACTERS USING TRIM(), WHITESPACE
+    Serial.print("Nodemcu ");   // Checking the value in serial monitor 
+    Serial.println(data);     // The value in serial monitor
+    webSocket.sendTXT(data); // Sending the value to server
   }
-  // liverReading();
-  // waterLevelFunc();
-  // getTempreture();
-  // lcd.setCursor(0, 0);
-  // lcd.print("Blockage : " + String(waterLevel ? "True " : "False"));
-  // lcd.setCursor(0, 1);  // Set cursor to the beginning of the second line
-  // lcd.print("Liver State: " + String(liverState ? "OFF " : "ON "));
+
+ 
 }
