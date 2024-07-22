@@ -95,7 +95,7 @@ void loop() {
     digitalWrite(7, LOW);  // Relay connected to D7 is turned off
   }
 
-
+}
 
 String getBattery() {
   // Read the battery voltage
