@@ -2,176 +2,227 @@
 #include <ArduinoJson.h>
 
 
-int waterLevelPin = A4;
-int temperture = A7;
-int liverPin = A5;
-int batteryPin = A3;
-int lowBattery = 0;
-int prevLiverState = 0, prevWaterLevelState = 0;
-float prevTemputureState = 0;
+// Define the pin connections for the sensors and devices
+const int waterLevelPin = A4; // Analog pin for water level sensor
+const int temperturePin = A3; // Analog pin for temperature sensor
+const int liverPin = A5; // Digital pin for liver sensor
+const int batteryPin = A2; // Analog pin for battery voltage sensor
+
+// Define the thresholds for low battery and battery voltage difference
+const float lowBatteryThreshold = 0.0; // Below this voltage, the battery is considered low
+const float batteryVoltageDiff = 0.10; // Difference in battery voltage to trigger charging or discharging
+
+// Initialize variables to store previous sensor states
+int prevLiverState = 0; // Previous state of the liver sensor
+int prevWaterLevelState = 0; // Previous state of the water level sensor
+float prevTemperatureState = 0; // Previous temperature reading
+
+// Initialize the LCD display
 LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
 
-// #include <SoftwareSerial.h>
+// Initialize variables for water level sensors
+int fullWaterSensor = 1;
+int midWaterSensor = 1;
+int bottomWaterSensor = 1;
 
-// SoftwareSerial s(5, 6);
-// for Tempreture Sensor reading
-int Vo;
-float R1 = 10000;
-float logR2, R2, T, Tc, Tf;
-float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
-
-int full_sensor = 1;
-int mid_sensor = 1;
-int bottom_sensor = 1;
+// Define the JSON document for sending data to the server
 DynamicJsonDocument doc(128);
-int deviceId = 1;
 
+// Define the device ID
+const int deviceId = 1;
 
+/**
+ * @brief Setup function runs once when the Arduino board turns on
+ * 
+ * This function initializes the serial communication, sets up the LCD,
+ * sets the pin modes for the sensors and gets the initial state of the sensors.
+ */
 void setup() {
+  // Setup serial communication at 9600 baud rate
   uint32_t baud = 9600;
   Serial.begin(baud);
-  // setUpWIFI();
-
+  
+  // Initialize the LCD display with 16 columns and 2 rows
   lcd.begin(16, 2);
-  // lcd.init();
-  // lcd.backlight();
-  pinMode(7, OUTPUT);
+  pinMode(7 , OUTPUT);
+  // Set pin modes for the sensors
   pinMode(batteryPin, INPUT_PULLUP);
   pinMode(liverPin, INPUT_PULLUP);
   pinMode(temperture, INPUT_PULLUP);
-  // lowBattery = digitalRead(batteryPin) / 100 ;
+  
+  // Get the initial state of the sensors
   prevLiverState = digitalRead(liverPin);
   prevWaterLevelState = digitalRead(waterLevelPin);
-  prevTemputureState = analogRead(temperture);
+  prevTemperatureState = analogRead(temperture);
 }
 
+/**
+ * @brief The main loop function
+ * 
+ * This function is called repeatedly and is responsible for getting the sensor readings
+ * and displaying them on the LCD.
+ */
 void loop() {
-  // put your main code here, to run repeatedly:
+  // Get the sensor readings
   bool waterLevel = waterLevelFunc();
   bool liverState = liverReading();
   int temputureState = getTempreture();
 
+  // Display the sensor readings on the LCD
   lcd.setCursor(0, 0);
-  lcd.print("Blockage : " + String(waterLevel ? "True " : "False"));
-  lcd.setCursor(0, 1);  // Set cursor to the beginning of the second line
-  lcd.print("Liver State: " + String(liverState ? "OFF " : "ON "));
+  lcd.print("B " + String(waterLevel ? "Yes" : "No"));
+  lcd.setCursor(10, 0);  // Set cursor to the beginning of the second line
+  lcd.print("L " + String(liverState ? "OFF " : "ON "));
 
-  getBattery();
+  String pStatus = getBattery();
 
+  lcd.setCursor(10, 1);  // Set cursor to the beginning of the second line
+  lcd.print("P " + String(pStatus));
 
-
+  // Delay for 2 seconds to avoid too many updates to the LCD
   delay(2000);
-  // D7 relay
-  // lower than 3.6 . need charging . turn on relay
-  // more then 3.9 . stop charging . turn off relay
-}
 
-float getBattery() {
-  float value = analogRead(batteryPin) / 100;
-  if (value < 3.6) {
-    digitalWrite(7, HIGH);
+  /**
+   * @brief Control the charging relay based on battery voltage
+   * 
+   * This block of code controls the charging relay based on the battery voltage.
+   * If the battery voltage is lower than 3.6V, the relay is turned on to start charging.
+   * If the battery voltage is more than 3.9V, the relay is turned off to stop charging.
+   */
+  if (pStatus == "Low") {
+    digitalWrite(7, HIGH);  // Relay connected to D7 is turned on
+  } else if (pStatus == "High") {
+    digitalWrite(7, LOW);  // Relay connected to D7 is turned off
+  }
 
+
+
+String getBattery() {
+  // Read the battery voltage
+  float batteryVoltage = analogRead(batteryPin) / 102.4;
+
+  // Check if the battery voltage is low
+  if (batteryVoltage < 3.6) {
+    digitalWrite(7, HIGH);  // Turn on the charging relay
   } else {
-    digitalWrite(7, LOW);
+    digitalWrite(7, LOW);  // Turn off the charging relay
   }
 
+  // Check if the battery voltage has changed by at least 20%
+  if (abs(batteryVoltage - lowBattery) >= batteryDiff) {
+    lowBattery = batteryVoltage;
 
-  if (digitalRead(7) != lowBattery) {
-    lowBattery = digitalRead(7);
-    if (value < 3.6) {
-      digitalWrite(7, HIGH);
-      doc.clear();  // Clear the document before adding new data
-      doc["id"] = String(deviceId);
-      doc["key"] = "batteryStatus";
-      doc["cmd"] = "update";
-      doc["value"] = "Low";
-      String jsonString;
-      serializeJson(doc, jsonString);
-
-      Serial.println(jsonString);
-    } else {
-      digitalWrite(7, LOW);
-      doc.clear();  // Clear the document before adding new data
-      doc["id"] = String(deviceId);
-      doc["key"] = "batteryStatus";
-      doc["cmd"] = "update";
-      doc["value"] = "Charged";
-      String jsonString;
-      serializeJson(doc, jsonString);
-
-      Serial.println(jsonString);
-    }
-  }
-}
-
-float getTempreture() {
-  // int Temp = analogRead(temperture);
-  // float voltage = Temp * 5.0 / 1023.0;  // Convert to voltage
-  // float celsius = (voltage - 0.5) / 0.01;
-  // Serial.println(Temp);
-  // Serial.println(220 - celsius);
-  float Temp = analogRead(temperture);
-  float celsius = (1024 - Temp) / 23;
-
-  // 1024 - temp   = value / ? = to get room tempreture .
-
-  // Serial.println(celsius);
-  if (abs(prevTemputureState - celsius) >= 2) {
-    prevTemputureState = celsius;
-    // webSocket.sendTXT("Change in prevWaterLevelState");
-    doc.clear();  // Clear the document before adding new data
+    // Create a JSON document to send to the server
+    doc.clear();
     doc["id"] = String(deviceId);
-    doc["key"] = "tempretureState";
+    doc["key"] = "batteryStatus";
     doc["cmd"] = "update";
-    doc["value"] = prevTemputureState;
+
+    if (batteryVoltage >= 7.8) {
+      doc["value"] = "full";
+    } else if (batteryVoltage < 7.8 && batteryVoltage >= 7.3) {
+      doc["value"] = "mid";
+    } else {
+      doc["value"] = "low";
+    }
+
+    // Convert the JSON document to a string
     String jsonString;
     serializeJson(doc, jsonString);
 
+    // Send the JSON string to the server
+    Serial.println(jsonString);
+  }
+
+  // Return the battery voltage as a string
+  return String(batteryVoltage);
+}
+
+float getTempreture() {
+  // Convert the analog reading to voltage
+  float voltage = (float)analogRead(temperture) * 5.0 / 1023.0;
+
+  // Convert voltage to celsius
+  float celsius = (1024 - voltage) / 23;
+
+  // Send a webSocket message if the temperature has changed by at least 2 degrees
+  if (abs(prevTemperatureState - celsius) >= 2) {
+    prevTemperatureState = celsius;
+
+    // Create a JSON document with the new temperature
+    doc.clear();
+    doc["id"] = String(deviceId);
+    doc["key"] = "tempretureState";
+    doc["cmd"] = "update";
+    doc["value"] = prevTemperatureState;
+    String jsonString;
+    serializeJson(doc, jsonString);
+
+    // Update the LCD with the new temperature
+    lcd.setCursor(0, 1);
+    lcd.print("T " + String(prevTemperatureState));
+
+    // Send the JSON document over the webSocket
     Serial.println(jsonString);
   }
 
   return celsius;
 }
 
-
-
-
 bool waterLevelFunc() {
-  // lcd.setCursor(0, 0);
-  // Serial.println("Water Level High: " + String(digitalRead(waterLevelPin)));
-  if (prevWaterLevelState != digitalRead(waterLevelPin)) {
-    prevWaterLevelState = digitalRead(waterLevelPin);
-    // webSocket.sendTXT("Change in prevWaterLevelState");
+  // Get the current state of the water level sensor
+  int waterLevelState = digitalRead(waterLevelPin);
+
+  // If the state has changed, update the LCD and send a WebSocket message
+  if (prevWaterLevelState != waterLevelState) {
+    prevWaterLevelState = waterLevelState;
+
+    // Update the LCD display
+    lcd.setCursor(0, 0);
+    lcd.print("B " + String(waterLevelState ? "ON " : "OFF"));
+
+    // Create a JSON document with the new water level state
     doc.clear();  // Clear the document before adding new data
     doc["id"] = String(deviceId);
     doc["key"] = "waterState";
     doc["cmd"] = "update";
-    doc["value"] = prevWaterLevelState;
+    doc["value"] = waterLevelState;
     String jsonString;
     serializeJson(doc, jsonString);
+
+    // Send the JSON document over the webSocket
     Serial.println(jsonString);
   }
 
-  return digitalRead(waterLevelPin) == 1 ? false : true;
+  // Return the water level state
+  return waterLevelState == 1 ? false : true;
 }
 
 bool liverReading() {
+  // Read the state of the liver sensor
   int sensorReading = digitalRead(liverPin);
-  // lcd.setCursor(0, 1);
+
+  // If the state has changed, update the LCD and send a WebSocket message
   if (prevLiverState != sensorReading) {
     prevLiverState = sensorReading;
-    doc.clear();  // Clear the document before adding new data
+
+    // Update the document with the new state
+    doc.clear();
     doc["id"] = String(deviceId);
     doc["key"] = "liverState";
     doc["cmd"] = "update";
     doc["value"] = prevLiverState;
+
+    // Convert the document to a JSON string
     String jsonString;
     serializeJson(doc, jsonString);
+
+    // Send the JSON string over the WebSocket
     Serial.println(jsonString);
   }
 
+  // Return the reading state
   bool reading = sensorReading == LOW;
-
 
   return reading;
 }
