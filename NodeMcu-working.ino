@@ -16,14 +16,14 @@ SoftwareSerial Serial2(D5, D6);  // RX, TX
 
 
 
-#define WIFI_SSID "myproject"  // wifi ssid 
-#define WIFI_PASSWORD "12345678" // wifi password 
-#define webUrl "192.168.38.175" // server ip
+#define WIFI_SSID "myproject"     // wifi ssid
+#define WIFI_PASSWORD "12345678"  // wifi password
+#define webUrl "192.168.38.175"   // server ip
 
 // input pins
-const int liverPin = 14; // input pin for the liver sensor
-const int waterLevelPin = 16; // input pin for the water level sensor
-const int temperaturePin = A0; // input pin for the temperature sensor
+const int liverPin = 14;        // input pin for the liver sensor
+const int waterLevelPin = 16;   // input pin for the water level sensor
+const int temperaturePin = A0;  // input pin for the temperature sensor
 
 // previous states of the sensors
 int prevLiverState = 0;
@@ -51,7 +51,7 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
     case WStype_DISCONNECTED:
       {
         // Clear the document before adding new data
-        doc.clear();  
+        doc.clear();
         doc["id"] = String(deviceId);
         doc["cmd"] = "disconnected";
         String jsonString;
@@ -65,7 +65,7 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
         USE_SERIAL.printf("[WSc] Connected to url: %s\n", payload);
 
         // send message to server when Connected
-        doc.clear();  
+        doc.clear();
         doc["id"] = String(deviceId);
         doc["cmd"] = "connected";
         String jsonString;
@@ -148,15 +148,13 @@ void loop() {
   // let the websocket client run
   webSocket.loop();
 
-// only if the serial monitor have printed something
+  // only if the serial monitor have printed something
   if (Serial2.available() > 0) {
 
     String data = Serial2.readString();  // NAME THE RECEIVED STRING
-    data.trim();  // ELIMINATE EXTRA CHARACTERS USING TRIM(), WHITESPACE
-    Serial.print("Nodemcu ");   // Checking the value in serial monitor 
-    Serial.println(data);     // The value in serial monitor
-    webSocket.sendTXT(data); // Sending the value to server
+    data.trim();                         // ELIMINATE EXTRA CHARACTERS USING TRIM(), WHITESPACE
+    Serial.print("Nodemcu ");            // Checking the value in serial monitor
+    Serial.println(data);                // The value in serial monitor
+    webSocket.sendTXT(data);             // Sending the value to server
   }
-
- 
 }
