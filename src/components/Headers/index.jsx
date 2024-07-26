@@ -43,59 +43,6 @@ const Header = (props) => {
                   {orderCount}
                 </span>
               </Card>
-              {/* <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0 ">
-                  <CardBody>
-                    <Row>
-                      <div className="col">
-                        <CardTitle className="text-uppercase text-muted mb-0 fs-6">
-                          In-Active Users
-                        </CardTitle>
-                        <span className="font-weight-bold mb-0 fs-4">
-                          {inActiveUser}
-                        </span>
-                      </div>
-
-                    </Row>
-
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
-                  <CardBody>
-                    <Row>
-                      <div className="col">
-                        <CardTitle className="text-uppercase text-muted mb-0 fs-6">
-                          Trips
-                        </CardTitle>
-                        <span className="font-weight-bold mb-0 fs-4">
-                          {tripCount}
-                        </span>
-                      </div>
-
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
-                  <CardBody>
-                    <Row>
-                      <div className="col">
-                        <CardTitle className="text-uppercase text-muted mb-0 fs-6">
-                          Orders
-                        </CardTitle>
-                        <span className="font-weight-bold mb-0 fs-4">
-                          {orderCount}
-                        </span>
-                      </div>
-
-                    </Row>
-
-                  </CardBody>
-                </Card>
-              </Col> */}
             </Row>
           </div>
         </Container >

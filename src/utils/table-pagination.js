@@ -1,3 +1,6 @@
+// common functions for table pagination and slice data for table
+
+
 const calculateRange = (data, rowsPerPage) => {
     const range = [];
     const num = Math.ceil(data.length / rowsPerPage);

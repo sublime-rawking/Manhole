@@ -11,8 +11,10 @@ function SideBar({ menu }) {
   const location = useLocation();
   const [active, setActive] = useState(1);
   const { logOut } = useAuth();
-
+  // Update the active state when the location changes
   useEffect(() => {
+    // Iterate through the menu items and see if the current path matches
+    // the item's path or the first part of the path (split by /:)
     menu.forEach((element) => {
       const data = location.pathname.split("/:");
       if (location.pathname === element.path) {
@@ -29,10 +31,12 @@ function SideBar({ menu }) {
     });
   }, [location.pathname]);
 
+  // Update the active state when the user clicks on a menu item
   const __navigate = (id) => {
     setActive(id);
   };
 
+  // Handle logout
   const logout = async () => await logOut();
 
   return (

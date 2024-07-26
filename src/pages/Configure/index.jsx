@@ -37,15 +37,18 @@ function Device() {
             console.error('Geolocation is not supported by this browser.');
         }
     };
+    // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Prepare data to update
             const updateData = {
                 deviceId: selectedValue,
                 latitude,
                 longitude,
                 city
-            }
+            };
+            // Call the device configuration API
             const result = await deviceConfigure(updateData);
             if (result) {
                 alert("Device configuration successful");
@@ -72,10 +75,14 @@ function Device() {
 
     };
 
+    // Fetch device list data when the component mounts
+    // and update the selectionData state with the result
     useEffect(() => {
         try {
             async function deviceList() {
                 const result = await fetchDeviceData();
+                // Map over the result data and create an array of objects
+                // with label and value properties for each device
                 const selectionData = result.data.map((item) => {
                     return {
                         label: `Device ID ${item.id}`, // ${item.id,
@@ -155,4 +162,3 @@ function Device() {
 }
 
 export default withProtected(Device);
-// export default Device;

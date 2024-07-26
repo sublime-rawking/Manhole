@@ -27,29 +27,33 @@ function MapView() {
   const [endIndexData, setEndIndexData] = useState(1); // State for current page
 
   // const position = [19.024842, 73.02202];
+  // Fetches device data from the API and updates the state with the data.
+  // Also calculates the city counts and maps them to an array of objects.
   const fetchData = async () => {
     try {
+      // Fetches device data from the API.
       const result = await fetchDeviceData(true);
 
+      // Calculates the city counts by reducing the array of items and mapping the cities to counts.
       const cityCounts = result.data.reduce((counts, item) => {
         const { city } = item;
         counts[city] = (counts[city] || 0) + 1;
         return counts;
       }, {});
 
-
+      // Maps the cities to an array of objects with the city name and count.
       const mappedArray = Object.keys(cityCounts).map(city => ({
         city,
         count: cityCounts[city]
       }));
 
-      // set city data
+      // Updates the state with the device data, city data, original data, and sliced city data.
       setLocations(result.data);
       setCityData(mappedArray);
       setOriginalData(mappedArray);
       setCityData(sliceData(mappedArray, page, 10));
     } catch (error) {
-      // Handle the error as needed
+      // Handles the error as needed.
       console.error("API call error:", error);
     }
   };
@@ -59,17 +63,28 @@ function MapView() {
   }, [page]);
 
   // Search
+  /**
+   * Handles the search input change event.
+   * Updates the search state with the new value.
+   * Filters the original data array based on the search value
+   * and updates the city data state with the filtered results.
+   * If the search value is empty, resets the city data state to the original data.
+   *
+   * @param {Event} event - The input change event.
+   * @return {void}
+   */
   const __handleSearch = (event) => {
-    setSearch(event.target.value);
+    setSearch(event.target.value); // Update search state with new value
     if (event.target.value !== '') {
+      // Filter the original data based on the search value
       let search_results = originalData.filter((item) =>
         item.city.toLowerCase().includes(search.toLowerCase())
       );
-      setCityData(search_results);
+      setCityData(search_results); // Update city data state with filtered results
     }
     else {
-      __handleChangePage(1);
-      setCityData(originalData);
+      __handleChangePage(1); // Reset the page state to 1
+      setCityData(originalData); // Reset city data state to original data
     }
   };
 
@@ -209,4 +224,3 @@ function MapView() {
 }
 
 export default withProtected(MapView);
-// export default MapView;

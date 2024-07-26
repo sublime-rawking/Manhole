@@ -1,6 +1,7 @@
 import axios from 'axios';
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+// admin login api
 export const adminLogin = async (credentials) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/device/adminLogin`, credentials, {
@@ -19,6 +20,7 @@ export const adminLogin = async (credentials) => {
     }
 };
 
+// get device list
 export const fetchDeviceData = async (getCords) => {
     try {
         console.log(API_BASE_URL);
@@ -31,6 +33,7 @@ export const fetchDeviceData = async (getCords) => {
     } 
 };
 
+// api for device configure
 export const deviceConfigure = async (fromData) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/device/configureDevice`, fromData, {
