@@ -3,19 +3,19 @@
 
 
 // Define the pin connections for the sensors and devices
-const int waterLevelPin = A4; // Analog pin for water level sensor
-const int temperturePin = A3; // Analog pin for temperature sensor
-const int liverPin = A5; // Digital pin for liver sensor
-const int batteryPin = A2; // Analog pin for battery voltage sensor
+const int waterLevelPin = A4;  // Analog pin for water level sensor  (green for water)
+const int temperturePin = A3;  // Analog pin for temperature sensor
+const int liverPin = A5;       // Digital pin for liver sensor (white for lever )
+const int batteryPin = A2;     // Analog pin for battery voltage sensor
 
 // Define the thresholds for low battery and battery voltage difference
-const float lowBatteryThreshold = 0.0; // Below this voltage, the battery is considered low
-const float batteryVoltageDiff = 0.10; // Difference in battery voltage to trigger charging or discharging
+const float lowBatteryThreshold = 0.0;  // Below this voltage, the battery is considered low
+const float batteryVoltageDiff = 0.10;  // Difference in battery voltage to trigger charging or discharging
 
 // Initialize variables to store previous sensor states
-int prevLiverState = 0; // Previous state of the liver sensor
-int prevWaterLevelState = 0; // Previous state of the water level sensor
-float prevTemperatureState = 0; // Previous temperature reading
+int prevLiverState = 0;          // Previous state of the liver sensor
+int prevWaterLevelState = 0;     // Previous state of the water level sensor
+float prevTemperatureState = 0;  // Previous temperature reading
 
 // Initialize the LCD display
 LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
@@ -41,15 +41,15 @@ void setup() {
   // Setup serial communication at 9600 baud rate
   uint32_t baud = 9600;
   Serial.begin(baud);
-  
+
   // Initialize the LCD display with 16 columns and 2 rows
   lcd.begin(16, 2);
-  pinMode(7 , OUTPUT);
+  pinMode(7, OUTPUT);
   // Set pin modes for the sensors
   pinMode(batteryPin, INPUT_PULLUP);
   pinMode(liverPin, INPUT_PULLUP);
   pinMode(temperture, INPUT_PULLUP);
-  
+
   // Get the initial state of the sensors
   prevLiverState = digitalRead(liverPin);
   prevWaterLevelState = digitalRead(waterLevelPin);
@@ -94,7 +94,6 @@ void loop() {
   } else if (pStatus == "High") {
     digitalWrite(7, LOW);  // Relay connected to D7 is turned off
   }
-
 }
 
 String getBattery() {
@@ -140,7 +139,7 @@ String getBattery() {
 
 float getTempreture() {
   // Convert the analog reading to voltage
-  float voltage = (float)analogRead(temperture) * 5.0 / 1023.0;
+  float voltage = analogRead(temperture) * 5.0 / 1023.0;
 
   // Convert voltage to celsius
   float celsius = (1024 - voltage) / 23;
@@ -221,8 +220,7 @@ bool liverReading() {
     Serial.println(jsonString);
   }
 
-  // Return the reading state
-  bool reading = sensorReading == LOW;
 
-  return reading;
+
+  return sensorReading == 1 ? false : true;
 }
