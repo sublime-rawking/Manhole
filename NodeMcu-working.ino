@@ -12,13 +12,13 @@
 ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 #define USE_SERIAL Serial1
-SoftwareSerial Serial2(D5, D6);  // RX, TX
+SoftwareSerial Serial2(D5, D6);  // RX (Yellow), TX (Green)
 
 
 
 #define WIFI_SSID "myproject"     // wifi ssid
 #define WIFI_PASSWORD "12345678"  // wifi password
-#define webUrl "192.168.38.175"   // server ip
+#define webUrl "5.189.156.172"   // server ip
 
 // input pins
 const int liverPin = 14;        // input pin for the liver sensor
