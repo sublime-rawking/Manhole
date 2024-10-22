@@ -2,7 +2,6 @@
 import { appName } from "@/assets/constants";
 import {
     Card,
-    Typography,
 } from "@material-tailwind/react";
 import { GrHomeRounded } from "react-icons/gr";
 import { MdOutlineDeviceHub } from "react-icons/md";
@@ -41,9 +40,9 @@ export function Sidebar() {
     return (
         <Card className={`h-full w-full  ${minimize ? "md:w-fit hover:md:w-full group" : ""} md:max-w-[12rem] p-4 rounded-none  bg-primary/100 text-white shadow-xl shadow-blue-gray-900/5`}>
             <div className="mb-2 p-4 text-center mx-auto">
-                <Typography variant="h5" color="white" >
+                <p className="text-2xl font-semibold" >
                     {minimize ? "AE" : appName}
-                </Typography>
+                </p>
             </div>
             <div className="w-full p-0 m-0 h-full items-center">
                 {sideBarContent.map((item, index) => (
@@ -63,7 +62,7 @@ export function Sidebar() {
                     <AiOutlineLogout className="h-5 w-5" />
                     <div className={`${minimize ? "hidden group-hover:block" : "block"}`} >
 
-                        Log Out
+                        Logout
                     </div>
                 </div>
                 <div className={`   my-2 hover:bg-white/10 p-2 rounded-lg w-fit `}>

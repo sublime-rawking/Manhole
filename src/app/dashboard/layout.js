@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-tailwind/react'
 export default function layout({ children }) {
     return (
         <ThemeProvider
+        
         >
             <div className='flex w-full h-[100vh]'>
 

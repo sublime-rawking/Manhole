@@ -1,6 +1,8 @@
 
 import { appName } from "@/assets/constants";
 import "./globals.css";
+import { poppins } from "@/assets/fonts";
+import CustomThemeProvider from "@/provider/themeProvider";
 
 
 export const metadata = {
@@ -11,8 +13,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ ...poppins.style }}>
+        <CustomThemeProvider>
           {children}
+        </CustomThemeProvider>
       </body>
     </html >
   );

@@ -1,5 +1,4 @@
 "use client"
-import React from 'react'
 import { Carousel } from "@material-tailwind/react";
 import Image from 'next/image';
 import { carouselData } from './data';
@@ -8,7 +7,7 @@ export default function CarouselSection() {
     return (
 
         <Carousel
-            className="rounded-xl"
+            className="relative after:absolute after:inset-0 after:bg-black/30"
             loop
             autoplay
             autoplayDelay={3000}

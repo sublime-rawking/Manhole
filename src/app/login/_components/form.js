@@ -1,22 +1,21 @@
 'use client'
-import { laila } from '@/assets/fonts';
-import { Button, Card, Input, Typography } from '@material-tailwind/react'
-import React, { useState } from 'react'
+import { Button, Card, Input } from '@material-tailwind/react';
+import { useState } from 'react';
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false)
     return (
-        <div className='my-5 h-full'>
+        <div className='my-5 h-fit  bg-white  flex justify-center  px-5 py-10 rounded-xl '>
             <Card color="transparent" shadow={false} className="">
-                <p className={`text-xl text-center md:text-2xl lg:text-5xl text-black font-bold ${laila.className}`}>Admin Login </p>
+                <p className={`text-2xl text-center md:text-3xl lg:text-4xl text-primary font-semibold `}>Admin Login </p>
 
                 <form className="mt-6 w-full mx-auto  md:w-96">
                     <div className="mb-1 flex flex-col gap-6">
 
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
+                        <div className=" text-black text-lg -mb-3 font-medium">
                             Your Email
-                        </Typography>
+                        </div>
                         <Input
                             size="lg"
                             placeholder="name@mail.com"
@@ -25,9 +24,10 @@ export default function LoginForm() {
                                 className: "before:content-none after:content-none",
                             }}
                         />
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
+                        <div className=" text-black text-lg -mb-3 font-medium">
+
                             Password
-                        </Typography>
+                        </div>
                         <Input
                             type={showPassword ? "text" : "password"}
                             size="lg"

@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react'
 const socket = new WebSocket(`${process.env.WEBSOCKET}/?id=999`)
 import { Card, Typography } from "@material-tailwind/react";
-import { fetchDeviceData } from '@/services/device.Service';
-import { laila } from '@/assets/fonts';
+import { fetchDeviceData } from '@/services/device.service';
+import errorAnimation from '@/assets/animation/error.gif';
+import { FaCheck } from "react-icons/fa6";
+import Image from 'next/image';
 
 export default function DevicesPages() {
     const TABLE_HEAD = [
@@ -124,7 +126,7 @@ export default function DevicesPages() {
     return (
         <div className='w-full mx-5 h-full'>
 
-            <h2 className={`text-2xl ${laila.className} mx-5 `}>Devices</h2>
+            <h2 className={`text-2xl  mx-5 `}>Devices</h2>
 
             <Card className=" w-full p-3  ">
                 <table className="w-full min-w-max  text-left">
@@ -172,8 +174,11 @@ export default function DevicesPages() {
                                         </td>
                                         <td className={classes} style={{ color: item.batteryStatus === 'low' ? "red" : "green" }}>{item.batteryStatus !== undefined ? item.batteryStatus.toUpperCase() : "NA"}</td>
                                         <td className={classes}>
-
-                                            {/* <img src={showStatus ? checked : errorAnimation} alt="status" width={showStatus ? "20" : "40"} /> */}
+                                            {!showStatus ?
+                                                <FaCheck className='w-6 h-6 text-green-700' />
+                                                :
+                                                <Image priority src={errorAnimation} alt="status" className='w-6 h-6  object-fill' width={1000} height={1000} />
+                                            }
                                         </td>
                                     </tr>
                                 )
