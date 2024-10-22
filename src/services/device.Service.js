@@ -47,7 +47,7 @@ export const deviceConfigure = async (fromData) => {
         }
 
     } catch (error) {
-        console.error('Error while chaning Password :', error);
+        console.error('Error while changing Password :', error);
         throw error;
     }
 };
