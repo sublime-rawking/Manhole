@@ -38,16 +38,16 @@ export function Sidebar() {
     }
 
     return (
-        <Card className={`h-full w-full  ${minimize ? "md:w-fit hover:md:w-full group" : ""} md:max-w-[12rem] p-4 rounded-none  bg-primary/100 text-white shadow-xl shadow-blue-gray-900/5`}>
+        <Card className={`h-full w-full  ${minimize ? "md:w-fit hover:md:w-full group" : ""} md:max-w-[12rem] p-4 rounded-none  bg-white text-black shadow-xl shadow-blue-gray-900/5`}>
             <div className="mb-2 p-4 text-center mx-auto">
-                <p className="text-2xl font-semibold" >
+                <p className="text-2xl font-semibold text-primary" >
                     {minimize ? "AE" : appName}
                 </p>
             </div>
             <div className="w-full p-0 m-0 h-full items-center">
                 {sideBarContent.map((item, index) => (
                     <Link href={item.route} key={index} >
-                        <div className={` ${pathname == item.route ? "bg-secondary" : ""}  my-2 hover:bg-white/10 p-2 rounded-lg w-full flex items-center gap-2  `}>
+                        <div className={` my-2 hover:bg-primary/15 hover:text-black p-2 pl-4 rounded-lg  flex items-center gap-4 ${minimize ? "w-fit" : "w-full"}  ${pathname == item.route ? "bg-secondary text-white font-medium" : ""} `}>
                             {item.icon}
                             <div className={`${minimize ? "hidden group-hover:block" : "block"}`} >
                                 {item.title}
@@ -65,7 +65,7 @@ export function Sidebar() {
                         Logout
                     </div>
                 </div>
-                <div className={`   my-2 hover:bg-white/10 p-2 rounded-lg w-fit `}>
+                <div className={` my-2 hover:bg-primary/15 hover:text-black p-2 pl-4 rounded-lg  flex items-center gap-4 ${minimize ? "w-fit" : "w-full"}   `}>
                     {minimize ?
                         <IoIosArrowForward onClick={handleMinimize} className="h-5 w-5" />
                         : <IoIosArrowBack onClick={handleMinimize} className="h-5 w-5" />

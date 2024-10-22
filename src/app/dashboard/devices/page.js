@@ -136,7 +136,6 @@ export default function DevicesPages() {
                             {
                                 TABLE_HEAD.map((head) => (
                                     <th key={head} className="border-b border-gray-300 pb-4 pt-10">
-
                                         <Typography
                                             variant="small"
                                             color="blue-gray"
