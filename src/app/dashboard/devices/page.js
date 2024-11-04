@@ -1,11 +1,12 @@
 "use client"
-import React, { useEffect, useState } from 'react'
-const socket = new WebSocket(`${process.env.WEBSOCKET}/?id=999`)
-import { Card, Typography } from "@material-tailwind/react";
-import { fetchDeviceData } from '@/services/device.service';
 import errorAnimation from '@/assets/animation/error.gif';
-import { FaCheck } from "react-icons/fa6";
+import { fetchDeviceData } from '@/services/device.service';
+import { Card, Typography } from "@material-tailwind/react";
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { FaCheck } from "react-icons/fa6";
+const socket = new WebSocket(`${process.env.WEBSOCKET}/?id=999`)
 
 export default function DevicesPages() {
     const TABLE_HEAD = [
@@ -22,7 +23,7 @@ export default function DevicesPages() {
     const [currentPageSchedule, setCurrentPageSchedule] = useState(1); // State for current page
     const [endIndexData, setEndIndexData] = useState(1); // State for current page
     const [originalData, setOriginalData] = useState([]);
-
+    const { push } = useRouter();
     // Handle errors
     /**
      * Handle error events from the WebSocket connection.
@@ -178,6 +179,14 @@ export default function DevicesPages() {
                                                 :
                                                 <Image priority src={errorAnimation} alt="status" className='w-6 h-6  object-fill' width={1000} height={1000} />
                                             }
+                                        </td>
+                                        <td className={classes}>
+                                            <button className="mt-6 bg-primary  text-sm px-3  py-2 rounded text-white"
+                                                onClick={() => push(`/dashboard/devices/${item.id}`)}
+                                            >
+
+                                                View
+                                            </button>
                                         </td>
                                     </tr>
                                 )
