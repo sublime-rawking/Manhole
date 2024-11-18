@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withPublic } from "../../context/protectedroutes";
+import { withPublic } from "../../context/protectedRoutes";
 import useAuth from "../../context/userContext.js";
 import "react-toastify/dist/ReactToastify.css";
 import AdminPng from "../../assets/images/admin.png";
@@ -35,7 +35,7 @@ function Login() {
       }
     } catch (error) {
       // log the error to the console
-      console.log(error);
+      console.error(error);
     }
   };
 

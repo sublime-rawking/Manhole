@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { withProtected } from "../../context/protectedroutes.js";
+import React from "react";
+import { withProtected } from "../../context/protectedRoutes.js";
 
 import "../styles.css";
 

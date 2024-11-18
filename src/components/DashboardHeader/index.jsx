@@ -38,9 +38,7 @@ const handleChangePassword = async (e) => {
         e.preventDefault();
         
         // Call the changePassword API
-        // console.log("formData :: ", formData);
         const response = await changePassword(formData);
-        // console.log("response :: ", response);
         
         // Display success or error toast based on API response
         if (response.success) {

@@ -195,8 +195,6 @@ const ChartComponent = (props) => {
           }
         });
 
-        console.log(tripData, "tripData");
-        console.log(orderData, "OrderData");
 
       } catch (error) {
         // Handle the error as needed

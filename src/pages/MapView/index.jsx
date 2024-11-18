@@ -5,7 +5,7 @@ import { fetchDeviceData } from '../../services/device.Service';
 import 'leaflet/dist/leaflet.css';
 import { pinIcon } from '../../assets/index.js';
 import { sliceData } from '../../utils/table-pagination';
-import { withProtected } from "../../context/protectedroutes.js";
+import { withProtected } from "../../context/protectedRoutes.js";
 import "../styles.css";
 
 
@@ -29,36 +29,37 @@ function MapView() {
   // const position = [19.024842, 73.02202];
   // Fetches device data from the API and updates the state with the data.
   // Also calculates the city counts and maps them to an array of objects.
-  const fetchData = async () => {
-    try {
-      // Fetches device data from the API.
-      const result = await fetchDeviceData(true);
 
-      // Calculates the city counts by reducing the array of items and mapping the cities to counts.
-      const cityCounts = result.data.reduce((counts, item) => {
-        const { city } = item;
-        counts[city] = (counts[city] || 0) + 1;
-        return counts;
-      }, {});
-
-      // Maps the cities to an array of objects with the city name and count.
-      const mappedArray = Object.keys(cityCounts).map(city => ({
-        city,
-        count: cityCounts[city]
-      }));
-
-      // Updates the state with the device data, city data, original data, and sliced city data.
-      setLocations(result.data);
-      setCityData(mappedArray);
-      setOriginalData(mappedArray);
-      setCityData(sliceData(mappedArray, page, 10));
-    } catch (error) {
-      // Handles the error as needed.
-      console.error("API call error:", error);
-    }
-  };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetches device data from the API.
+        const result = await fetchDeviceData(true);
+
+        // Calculates the city counts by reducing the array of items and mapping the cities to counts.
+        const cityCounts = result.data.reduce((counts, item) => {
+          const { city } = item;
+          counts[city] = (counts[city] || 0) + 1;
+          return counts;
+        }, {});
+
+        // Maps the cities to an array of objects with the city name and count.
+        const mappedArray = Object.keys(cityCounts).map(city => ({
+          city,
+          count: cityCounts[city]
+        }));
+
+        // Updates the state with the device data, city data, original data, and sliced city data.
+        setLocations(result.data);
+        setCityData(mappedArray);
+        setOriginalData(mappedArray);
+        setCityData(sliceData(mappedArray, page, 10));
+      } catch (error) {
+        // Handles the error as needed.
+        console.error("API call error:", error);
+      }
+    };
     fetchData();
   }, [page]);
 

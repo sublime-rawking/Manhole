@@ -1,13 +1,13 @@
 .sidebar {
     top: 0;
     left: 0;
-    width: 200px;
+    width: 150px;
     height: 100vh;
     display: flex;
     justify-content: center;
     position: sticky;
-    /* background-image: linear-gradient(#053B50, #053B50, #053B50); */
-    background-image: linear-gradient(#994D1C, #994D1C, #994D1C);
+    background-image: linear-gradient(#053B50, #053B50, #053B50);
+    /* background-image: linear-gradient(#994D1C, #994D1C, #994D1C); */
 }
 
 .sidebar-logo-container {
@@ -34,8 +34,7 @@
 }
 
 .sidebar-item {
-    padding: 1.5em;
-    padding-left: 2em;
+    padding: 1em;
     display: flex;
     color: #FFFFFF;
     list-style: none;
@@ -46,23 +45,22 @@
 }
 
 .sidebar-item:hover {
-    /* background-color: #176B87; */
-    background-color: #E48F45;
+    background-color: #176B87;
+    /* background-color: #E48F45; */
 }
 
 .sidebar-item-active {
-    padding: 1.5em;
-    padding-left: 2em;
+    padding: 1em;
+    /* padding-left: 2em; */
     display: flex;
     color: #FFFFFF;
     list-style: none;
     text-decoration: none;
     align-items: center;
     justify-content: flex-start;
-    /* background-color: #176B87; */
-    background-color: #E48F45;
+    background-color: #176B87;
+    /* background-color: #E48F45; */
     cursor: pointer;
-    border-width: 5px;
     border-color: #fff;
 
 
@@ -99,7 +97,7 @@
 
 
 .button {
-    padding: 15px 25px;
+    /* padding: 15px 25px; */
     font-size: 24px;
     text-align: center;
     cursor: pointer;

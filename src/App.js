@@ -6,6 +6,8 @@ import sidebar_menu from './constants/sidebar-menu';                // importing
 import Login from './components/Login/login';                       // importing Login
 import { AuthUserProvider } from "./context/userContext.js"         // importing AuthUserProvider for user authentication
 import './App.css';
+import SplashScreen from './pages/splashScreen';
+import DeviceDetails from './pages/Device/deviceDetails';
 
 
 // importing lazy pages here
@@ -38,16 +40,14 @@ const App = () => {
   return (
     <Router>
       <AuthUserProvider>
-
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<SplashScreen />}>
           <Routes >
             <Route exact path="/login" element={<Login />} />
-
             <Route exact path="/" element={renderRoute(<Dashboard />)} />
             <Route exact path="/devices" element={renderRoute(<Device />)} />
+            <Route path="devices/:deviceId" element={renderRoute(<DeviceDetails />)} />
             <Route exact path="/mapView" element={renderRoute(<MapView />)} />
             <Route exact path="/configure" element={renderRoute(<Configure />)} />
-
           </Routes>
         </Suspense>
       </AuthUserProvider>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { fetchDeviceData, deviceConfigure } from '../../services/device.Service';
 // import DashboardHeader from '../../components/DashboardHeader';
-import { withProtected } from "../../context/protectedroutes.js"
+import { withProtected } from "../../context/protectedRoutes.js"
 import '../styles.css';
 
 

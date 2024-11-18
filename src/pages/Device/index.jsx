@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { sliceData } from '../../utils/table-pagination';
 import { fetchDeviceData } from '../../services/device.Service';
-import { withProtected } from "../../context/protectedroutes.js"
+import { withProtected } from "../../context/protectedRoutes.js"
 import '../styles.css';
 import checked from '../../assets/images/check.png'
 import errorAnimation from '../../assets/animation/error.gif';
+import { CiViewBoard } from "react-icons/ci";
+import { Link } from 'react-router-dom';
 
 // socket connection
 const socket = new WebSocket(`${process.env.REACT_APP_WEBSOCKET}/?id=999`);
 
 
 function Device() {
+
     const [device, setDevice] = useState([]);
     const [page, setPage] = useState(1);
     const [currentPageSchedule, setCurrentPageSchedule] = useState(1); // State for current page
@@ -25,7 +28,7 @@ function Device() {
      * @param {Event} event - The error event.
      */
     socket.onerror = function (event) {
-        console.log("Error occured ", event);
+        console.log("Error occurred ", event);
     }
 
     /**
@@ -59,15 +62,15 @@ function Device() {
         // When a message is received, parse the JSON data and update the device state
         socket.addEventListener("message", async event => {
             try {
-                const deviceScoketData = JSON.parse(event.data);
+                const deviceSocketData = JSON.parse(event.data);
 
                 // Update the device state with the new value
                 setDevice(prevState => {
                     const updatedDevices = prevState.map(device => {
                         // Check if the device id matches the one in the message
-                        if (device.id === Number(deviceScoketData.id)) {
+                        if (device.id === Number(deviceSocketData.id)) {
                             // Update the specific property based on the key in the message
-                            device[deviceScoketData.key] = deviceScoketData.value;
+                            device[deviceSocketData.key] = deviceSocketData.value;
                         }
                         return device;
                     });
@@ -78,7 +81,7 @@ function Device() {
                 console.log('Error parsing JSON:', error.message);
             }
         });
-    }, []);
+    }, [page]);
 
 
     // Handle the previous page button
@@ -99,6 +102,9 @@ function Device() {
             setDevice(sliceData(device, page, 10));
         }
     };
+
+
+
 
     // Handle the next page button
     const handleNext = () => {
@@ -127,19 +133,22 @@ function Device() {
 
                 <table style={{ textAlign: "center" }}>
                     <thead>
-                        <th key="id">DEVICE-ID</th>
-                        <th key="liver">LIVER STATE</th>
-                        <th key="water">WATER BLOCKAGE</th>
-                        <th key="temp">TEMPRETURE STATE</th>
-                        <th key="connection">BATTERY</th>
-                        <th key="status">STATUS</th>
+                        <tr>
+
+                            <th key="id">DEVICE-ID</th>
+                            <th key="liver">LIVER STATE</th>
+                            <th key="water">WATER BLOCKAGE</th>
+                            <th key="connection">BATTERY</th>
+                            <th key="status">STATUS</th>
+                            <th key="action">Action</th>
+                        </tr>
                     </thead>
 
                     {device.length !== 0 ?
                         <tbody>
                             {device.map((item, index) => {
                                 let showStatus = true;
-                                if (item.liverState === 1 || item.waterState === 1 || item.batteryStatus === 'low' || Number(item.tempretureState).toFixed(2) >= 30) {
+                                if (item.liverState === 1 || item.waterState === 1 || item.batteryStatus === 'low') {
                                     showStatus = false
                                 }
                                 return (
@@ -147,9 +156,14 @@ function Device() {
                                         <td>{item.id}</td>
                                         <td style={{ color: item.liverState === 1 ? "red" : "green" }}>{item.liverState !== undefined ? item.liverState === 1 ? "OPEN" : "CLOSE" : "NA"}</td>
                                         <td style={{ color: item.waterState === 1 ? "red" : "green" }}>{item.waterState !== undefined ? item.waterState === 1 ? "HIGH" : "NORMAL" : "NA"}</td>
-                                        <td style={{ color: Number(item.tempretureState).toFixed(2) >= 30 ? "red" : "green" }}>{item.tempretureState !== undefined ? Number(item.tempretureState).toFixed(2) : "NA"}</td>
                                         <td style={{ color: item.batteryStatus === 'low' ? "red" : "green" }}>{item.batteryStatus !== undefined ? item.batteryStatus.toUpperCase() : "NA"}</td>
                                         <td ><img src={showStatus ? checked : errorAnimation} alt="status" width={showStatus ? "20" : "40"} />
+                                        </td>
+                                        <td >
+                                            <Link to={`/devices/${item.id}`} className="btn btn-link p-0">
+                                                <CiViewBoard style={{ cursor: "pointer", color: "black" }} size={30} />
+                                            </Link>
+
                                         </td>
                                     </tr>
                                 )
